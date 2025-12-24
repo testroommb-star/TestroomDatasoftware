@@ -1,0 +1,2897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duty Roster System - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --sidebar: #1a252f;
+            --card-bg: #ffffff;
+            --border: #ecf0f1;
+            --text: #2c3e50;
+            --light-text: #7f8c8d;
+            --hover-bg: #f8f9fa;
+        }
+        
+        .theme-blue {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --sidebar: #1a252f;
+        }
+        
+        .theme-green {
+            --primary: #1a5c36;
+            --secondary: #27ae60;
+            --accent: #c0392b;
+            --sidebar: #0d2818;
+        }
+        
+        .theme-purple {
+            --primary: #4a235a;
+            --secondary: #8e44ad;
+            --accent: #c0392b;
+            --sidebar: #2c0c3e;
+        }
+        
+        .theme-dark {
+            --primary: #1c2833;
+            --secondary: #5d6d7e;
+            --accent: #e74c3c;
+            --sidebar: #17202a;
+            --card-bg: #2c3e50;
+            --border: #34495e;
+            --text: #ecf0f1;
+            --light-text: #bdc3c7;
+            --hover-bg: #34495e;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background: var(--sidebar);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-top: 30px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            margin-bottom: 40px;
+            text-align: center;
+            width: 100%;
+            padding: 0 15px;
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: var(--secondary);
+            background: rgba(52, 152, 219, 0.1);
+            padding: 15px;
+            border-radius: 16px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        
+        .logo i:hover {
+            transform: rotate(15deg);
+            background: rgba(52, 152, 219, 0.2);
+        }
+        
+        .logo-text {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 10px;
+            display: block;
+        }
+        
+        .nav-menu {
+            list-style: none;
+            width: 100%;
+            padding: 0 15px;
+        }
+        
+        .nav-menu li {
+            margin-bottom: 8px;
+        }
+        
+        .nav-menu a {
+            color: #bdc3c7;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+        
+        .nav-menu a i {
+            font-size: 20px;
+            min-width: 40px;
+            text-align: center;
+            margin-right: 12px;
+        }
+        
+        .nav-menu a span {
+            margin-left: 0;
+            opacity: 1;
+        }
+        
+        .nav-menu a:hover {
+            background: rgba(52, 152, 219, 0.15);
+            color: var(--secondary);
+            transform: translateX(5px);
+        }
+        
+        .nav-menu a.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: var(--secondary);
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .theme-selector {
+            margin-top: auto;
+            padding: 20px 15px;
+            width: 100%;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .theme-label {
+            color: #bdc3c7;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        
+        .theme-option {
+            width: 100%;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .theme-option.active {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--secondary);
+        }
+        
+        .theme-blue-option {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+        }
+        
+        .theme-green-option {
+            background: linear-gradient(135deg, #1a5c36 0%, #27ae60 100%);
+        }
+        
+        .theme-purple-option {
+            background: linear-gradient(135deg, #4a235a 0%, #8e44ad 100%);
+        }
+        
+        .theme-dark-option {
+            background: linear-gradient(135deg, #1c2833 0%, #5d6d7e 100%);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-width: 0;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        
+        .header-left p {
+            color: var(--light-text);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .date-display {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .date-display i {
+            font-size: 18px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary);
+        }
+        
+        .stat-icon.green { background: rgba(39, 174, 96, 0.1); color: var(--success); }
+        .stat-icon.orange { background: rgba(243, 156, 18, 0.1); color: var(--warning); }
+        .stat-icon.red { background: rgba(231, 76, 60, 0.1); color: var(--accent); }
+        .stat-icon.purple { background: rgba(142, 68, 173, 0.1); color: #8e44ad; }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: var(--light-text);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .flash-cards-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .flash-cards-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .flash-cards-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .day-navigation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .day-nav-btn {
+            background: var(--hover-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .day-nav-btn:hover {
+            background: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+        
+        .current-day-display {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .flash-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .staff-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .staff-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .staff-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .staff-info h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        
+        .staff-info .staff-id {
+            font-size: 13px;
+            color: var(--light-text);
+            font-weight: 500;
+        }
+        
+        .staff-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-duty { background: #d1f7c4; color: #1e5a1e; }
+        .status-rest { background: #d0e7ff; color: #1a3a8a; }
+        .status-sick { background: #ffe7d6; color: #7a2c0a; }
+        .status-training { background: #f0e6ff; color: #4a1e8a; }
+        
+        .staff-details {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .detail-label {
+            color: var(--light-text);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: var(--text);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .staff-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .quick-actions {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .quick-actions h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .system-status {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .system-status h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background: var(--hover-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .activity-feed {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .activity-feed h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: var(--hover-bg);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary);
+            transition: all 0.3s;
+        }
+        
+        .activity-item:hover {
+            background: var(--border);
+            transform: translateX(5px);
+        }
+        
+        .activity-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--secondary);
+        }
+        
+        .activity-dot.success { background: var(--success); }
+        .activity-dot.warning { background: var(--warning); }
+        .activity-dot.danger { background: var(--accent); }
+        
+        .activity-content {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: var(--light-text);
+            font-weight: 500;
+        }
+        
+        .user-management {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #d68910;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+        }
+        
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        
+        .btn-outline:hover {
+            background: var(--hover-bg);
+            border-color: var(--secondary);
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .data-table th {
+            background: var(--hover-bg);
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .data-table tr:hover {
+            background: var(--hover-bg);
+        }
+        
+        .permission-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        
+        .permission-view { background: #dbeafe; color: #1e40af; }
+        .permission-edit { background: #d1fae5; color: #065f46; }
+        .permission-none { background: #f1f5f9; color: #64748b; }
+        
+        .excel-table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-top: 20px;
+            background: white;
+            position: relative;
+        }
+        
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        .excel-table th {
+            background: var(--hover-bg);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            min-width: 120px;
+            position: relative;
+        }
+        
+        .excel-table td {
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            min-width: 120px;
+            height: 40px;
+            position: relative;
+        }
+        
+        .excel-table td input, .excel-table td select {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+        }
+        
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .table-tabs {
+            display: flex;
+            background: var(--hover-bg);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        
+        .table-tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--light-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .table-tab:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--secondary);
+        }
+        
+        .table-tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .table-tab.add-tab {
+            background: var(--success);
+            color: white !important;
+        }
+        
+        .table-tab.add-tab:hover {
+            background: #219a52;
+            transform: scale(1.05);
+        }
+        
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .resource-item {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+        
+        .resource-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            border-color: var(--secondary);
+        }
+        
+        .resource-item i {
+            font-size: 32px;
+            color: var(--secondary);
+            margin-bottom: 12px;
+        }
+        
+        .resource-item p {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        
+        .delete-resource {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .resource-item:hover .delete-resource {
+            opacity: 1;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .close-modal {
+            font-size: 24px;
+            color: var(--light-text);
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .delete-confirmation {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .delete-confirmation .warning-icon {
+            font-size: 48px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .delete-confirmation h3 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .delete-confirmation p {
+            color: var(--light-text);
+            margin-bottom: 20px;
+        }
+        
+        .delete-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        /* Time Selection Styles */
+        .time-selection-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .time-input {
+            width: 120px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .time-separator {
+            color: var(--light-text);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+            
+            .sidebar:hover {
+                width: 220px;
+            }
+            
+            .nav-menu a span {
+                opacity: 0;
+            }
+            
+            .sidebar:hover .nav-menu a span {
+                opacity: 1;
+            }
+            
+            .logo-text {
+                display: none;
+            }
+            
+            .sidebar:hover .logo-text {
+                display: block;
+            }
+            
+            .theme-selector {
+                display: none;
+            }
+            
+            .sidebar:hover .theme-selector {
+                display: block;
+            }
+            
+            .main-content {
+                padding: 16px;
+                margin-left: 70px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flash-cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-selection-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .time-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="theme-blue">
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-calendar-alt"></i>
+                <span class="logo-text">Duty Roster Pro</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" data-section="dashboard" class="active"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li><a href="#" data-section="users"><i class="fas fa-user-shield"></i><span>User Access</span></a></li>
+                <li><a href="#" data-section="staff"><i class="fas fa-users"></i><span>Staff</span></a></li>
+                <li><a href="#" data-section="tables"><i class="fas fa-table"></i><span>Data Tables</span></a></li>
+                <li><a href="#" data-section="resources"><i class="fas fa-link"></i><span>Resources</span></a></li>
+            </ul>
+            
+            <div class="theme-selector">
+                <span class="theme-label">THEME COLOR</span>
+                <div class="theme-options">
+                    <div class="theme-option theme-blue-option active" data-theme="theme-blue"></div>
+                    <div class="theme-option theme-green-option" data-theme="theme-green"></div>
+                    <div class="theme-option theme-purple-option" data-theme="theme-purple"></div>
+                    <div class="theme-option theme-dark-option" data-theme="theme-dark"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p>Administrator Control Panel - Real-time Duty Management</p>
+                </div>
+                <div class="header-right">
+                    <div class="date-display">
+                        <i class="fas fa-calendar"></i>
+                        <span id="current-date">Monday, June 10, 2024</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="dashboard-section" class="section-content">
+                <div class="stats-grid">
+                    <div class="stat-card" data-detail="on-duty">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="on-duty-count">0</div>
+                                <div class="stat-label">On Duty Today</div>
+                            </div>
+                            <div class="stat-icon blue">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" data-detail="on-rest">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="rest-count">0</div>
+                                <div class="stat-label">On Rest Today</div>
+                            </div>
+                            <div class="stat-icon green">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" data-detail="total-users">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="user-count">0</div>
+                                <div class="stat-label">Active Users</div>
+                            </div>
+                            <div class="stat-icon orange">
+                                <i class="fas fa-user-friends"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card" data-detail="total-tables">
+                        <div class="stat-header">
+                            <div>
+                                <div class="stat-value" id="table-count">0</div>
+                                <div class="stat-label">Data Tables</div>
+                            </div>
+                            <div class="stat-icon purple">
+                                <i class="fas fa-database"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flash-cards-container" id="duty-flash-cards">
+                    <div class="flash-cards-header">
+                        <h2><i class="fas fa-clipboard-list"></i> Duty Roster</h2>
+                        <div class="day-navigation">
+                            <button class="day-nav-btn" id="prev-day-btn">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="current-day-display" id="current-day">Monday</div>
+                            <button class="day-nav-btn" id="next-day-btn">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flash-cards-grid" id="staff-cards-container">
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                    <div class="quick-actions-grid">
+                        <button class="btn btn-primary" id="quickAddUser">
+                            <i class="fas fa-user-plus"></i> Add New User
+                        </button>
+                        <button class="btn btn-success" id="quickCreateTable">
+                            <i class="fas fa-plus-circle"></i> Create Data Table
+                        </button>
+                        <button class="btn btn-warning" id="quickResetPassword">
+                            <i class="fas fa-key"></i> Reset Password
+                        </button>
+                        <button class="btn btn-danger" id="quickClearData">
+                            <i class="fas fa-trash-alt"></i> Clear All Data
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="system-status">
+                    <h3><i class="fas fa-server"></i> System Status</h3>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <span>Auto CR Calculation</span>
+                            <span style="background: var(--success); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Active</span>
+                        </div>
+                        <div class="status-item">
+                            <span>User Access Control</span>
+                            <span style="background: var(--secondary); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Enabled</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Data Backup</span>
+                            <span style="background: var(--warning); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Daily</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Local Storage</span>
+                            <span style="background: var(--success); color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">Active</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-feed">
+                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                    <div class="activity-list" id="activity-list">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="users-section" class="section-content" style="display: none;">
+                <div class="user-management">
+                    <div class="section-header">
+                        <h2>User Access Management</h2>
+                        <button class="btn btn-primary" id="addUserBtn">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Employee Name</th>
+                                    <th>Role</th>
+                                    <th>Password</th>
+                                    <th>Table Permissions</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="user-management" style="margin-top: 24px;">
+                    <div class="section-header">
+                        <h2>Table Permission Management</h2>
+                        <button class="btn btn-outline" id="refreshPermissionsBtn">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="permissionsTable">
+                            <thead>
+                                <tr id="permissionsHeader">
+                                </tr>
+                            </thead>
+                            <tbody id="permissionsTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="staff-section" class="section-content" style="display: none;">
+                <div class="user-management">
+                    <div class="section-header">
+                        <div>
+                            <h2>Staff Management</h2>
+                            <p style="color: var(--light-text); margin-top: 4px; font-size: 14px;">Manage staff members and assign User IDs</p>
+                        </div>
+                        <button class="btn btn-primary" id="addStaffBtn">
+                            <i class="fas fa-user-plus"></i> Add Staff
+                        </button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table class="data-table" id="staffDataTable">
+                            <thead>
+                                <tr>
+                                    <th>Emp ID</th>
+                                    <th>Name</th>
+                                    <th>Designation</th>
+                                    <th>Duty Hours</th>
+                                    <th>Location</th>
+                                    <th>Rest Day</th>
+                                    <th>Status</th>
+                                    <th>User Account</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staffTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tables-section" class="section-content" style="display: none;">
+                <div class="user-management">
+                    <div class="section-header">
+                        <div>
+                            <h2>Data Tables Management</h2>
+                            <p style="color: var(--light-text); margin-top: 4px; font-size: 14px;">Create and manage data tables</p>
+                        </div>
+                        <button class="btn btn-primary" id="createTableBtn">
+                            <i class="fas fa-plus-circle"></i> Create New Table
+                        </button>
+                    </div>
+                    
+                    <div class="table-tabs" id="tableTabs">
+                    </div>
+                    
+                    <div class="table-controls" id="activeTableControls">
+                        <div>
+                            <h3 id="activeTableName" style="font-size: 20px; font-weight: 700; color: var(--primary);">Select a Table</h3>
+                            <p id="activeTableInfo" style="color: var(--light-text); font-size: 14px;">Click on a tab to view table</p>
+                        </div>
+                        <div class="table-buttons" style="display: flex; gap: 10px;">
+                            <button class="btn btn-success" id="renameTableBtn" disabled>
+                                <i class="fas fa-edit"></i> Rename
+                            </button>
+                            <button class="btn btn-warning" id="exportTableBtn" disabled>
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button class="btn btn-danger" id="deleteTableBtn" disabled>
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="excel-table-container" id="excelTableContainer" style="display: none;">
+                        <table class="excel-table" id="excelTable">
+                            <thead id="tableHeader">
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 20px; display: none;" id="rowControls">
+                        <button class="btn btn-sm btn-primary" id="insertRowBtn">Add Row</button>
+                        <button class="btn btn-sm btn-primary" id="addColumnBtn">Add Column</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="resources-section" class="section-content" style="display: none;">
+                <div class="user-management">
+                    <div class="section-header">
+                        <div>
+                            <h2>Resource Links</h2>
+                            <p style="color: var(--light-text); margin-top: 4px; font-size: 14px;">Upload hyperlinks as clickable icons</p>
+                        </div>
+                        <button class="btn btn-primary" id="uploadResourceBtn">
+                            <i class="fas fa-plus"></i> Add Resource
+                        </button>
+                    </div>
+                    
+                    <div style="border: 2px dashed var(--border); border-radius: 10px; padding: 40px; text-align: center; margin-top: 20px; cursor: pointer;" id="uploadTrigger">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: var(--light-text); margin-bottom: 16px;"></i>
+                        <h3 style="color: var(--primary); margin-bottom: 8px;">Click to Add Resource Link</h3>
+                        <p style="color: var(--light-text); font-size: 14px;">Upload hyperlinks that will be converted to clickable icons</p>
+                    </div>
+                    
+                    <div class="resources-grid" id="iconContainer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="addUserModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Add New User</h2>
+                <span class="close-modal" id="closeAddUserBtn">&times;</span>
+            </div>
+            <form id="userForm">
+                <input type="hidden" id="editUserId" value="">
+                <div class="form-group">
+                    <label class="form-label">Select Employee</label>
+                    <select class="form-select" id="employeeSelect" required>
+                        <option value="">Select employee</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">User Role</label>
+                    <select class="form-select" id="userRole" required>
+                        <option value="employee">Employee (View Only)</option>
+                        <option value="editor">Editor (View & Edit)</option>
+                        <option value="manager">Manager (Full Access)</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 20px;" id="userFormSubmit">
+                    Create User Account
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="addStaffModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="staffModalTitle">Add New Staff</h2>
+                <span class="close-modal" id="closeAddStaffBtn">&times;</span>
+            </div>
+            <form id="staffForm">
+                <input type="hidden" id="editStaffId" value="">
+                
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="staffName" placeholder="Enter full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Designation</label>
+                    <input type="text" class="form-input" id="staffDesignation" placeholder="Enter designation" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Duty Hours</label>
+                    <select class="form-select" id="staffDutyHours" onchange="toggleCustomTimeSelection()">
+                        <option value="">Select duty hours</option>
+                        <option value="08:00-16:00">08:00-16:00</option>
+                        <option value="16:00-00:00">16:00-00:00</option>
+                        <option value="00:00-08:00">00:00-08:00</option>
+                        <option value="09:00-17:00">09:00-17:00</option>
+                        <option value="10:00-18:00">10:00-18:00</option>
+                        <option value="custom">Custom Time Selection</option>
+                    </select>
+                    
+                    <div id="customTimeSelection" style="margin-top: 10px; display: none;">
+                        <div class="time-selection-group">
+                            <input type="time" class="time-input" id="startTime" value="08:00">
+                            <span class="time-separator">to</span>
+                            <input type="time" class="time-input" id="endTime" value="16:00">
+                            <button type="button" class="btn btn-sm btn-primary" onclick="applyCustomTime()">
+                                <i class="fas fa-check"></i> Apply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Duty Location</label>
+                    <select class="form-select" id="staffLocation" required>
+                        <option value="">Select location</option>
+                        <option value="Test Room">Test Room</option>
+                        <option value="Control Building">Control Building</option>
+                        <option value="Main Office">Main Office</option>
+                        <option value="Field">Field</option>
+                        <option value="Remote">Remote</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Rest Day</label>
+                    <select class="form-select" id="restDaySelect">
+                        <option value="">Select Rest Day</option>
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                        <option value="Sunday">Sunday</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" id="staffStatus">
+                        <option value="On Duty">On Duty</option>
+                        <option value="Rest">Rest</option>
+                        <option value="Sick">Sick</option>
+                        <option value="Training">Training</option>
+                        <option value="Leave">Leave</option>
+                        <option value="Vacation">Vacation</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 20px;" id="staffFormSubmit">
+                    Add Staff Member
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="createTableModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Data Table</h2>
+                <span class="close-modal" id="closeCreateTableBtn">&times;</span>
+            </div>
+            <form id="createTableForm">
+                <div class="form-group">
+                    <label class="form-label">Table Name</label>
+                    <input type="text" class="form-input" id="tableName" placeholder="Enter table name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Number of Rows</label>
+                    <input type="number" class="form-input" id="tableRows" value="10" min="1" max="100" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Number of Columns</label>
+                    <input type="number" class="form-input" id="tableColumns" value="5" min="1" max="10" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Column Headers (comma separated)</label>
+                    <input type="text" class="form-input" id="columnHeaders" placeholder="e.g., Name, Age, Department, Salary, Status">
+                    <small style="color: var(--light-text);">Leave empty for default (Column 1, Column 2, ...)</small>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 20px;">
+                    Create Table
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content">
+            <div class="delete-confirmation">
+                <div class="warning-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 id="deleteConfirmTitle">Confirm Delete</h3>
+                <p id="deleteConfirmMessage">Are you sure you want to delete this item?</p>
+                <div class="delete-actions">
+                    <button class="btn btn-outline" id="cancelDeleteBtn">Cancel</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="resetPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reset Password</h2>
+                <span class="close-modal" id="closeResetPasswordBtn">&times;</span>
+            </div>
+            <form id="resetPasswordForm">
+                <div class="form-group">
+                    <label class="form-label">Select User</label>
+                    <select class="form-select" id="resetUserSelect" required>
+                        <option value="">Select user</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="text" class="form-input" id="newPassword" placeholder="Enter new password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 20px;">
+                    Reset Password
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="addResourceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Resource Link</h2>
+                <span class="close-modal" id="closeResourceBtn">&times;</span>
+            </div>
+            <form id="resourceForm">
+                <div class="form-group">
+                    <label class="form-label">Resource Name</label>
+                    <input type="text" class="form-input" id="resourceName" placeholder="Enter resource name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">URL</label>
+                    <input type="url" class="form-input" id="resourceUrl" placeholder="https://example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Icon</label>
+                    <select class="form-select" id="resourceIcon">
+                        <option value="fas fa-link">Link</option>
+                        <option value="fas fa-file">Document</option>
+                        <option value="fas fa-chart-bar">Chart</option>
+                        <option value="fas fa-calendar">Calendar</option>
+                        <option value="fas fa-database">Database</option>
+                        <option value="fas fa-cog">Settings</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 20px;">
+                    Add Resource
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Data Structures
+        let staffData = [];
+        let usersData = [];
+        let tablesData = [];
+        let resourcesData = [];
+        let activityLog = [];
+        let currentTableIndex = -1;
+        let currentDay = 0;
+        let deleteItemType = '';
+        let deleteItemIndex = -1;
+
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        // Toggle custom time selection
+        function toggleCustomTimeSelection() {
+            const dutyHoursSelect = document.getElementById('staffDutyHours');
+            const customTimeDiv = document.getElementById('customTimeSelection');
+            
+            if (dutyHoursSelect.value === 'custom') {
+                customTimeDiv.style.display = 'block';
+            } else {
+                customTimeDiv.style.display = 'none';
+            }
+        }
+
+        // Apply custom time
+        function applyCustomTime() {
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            
+            if (!startTime || !endTime) {
+                alert('Please select both start and end times');
+                return;
+            }
+            
+            const dutyHoursSelect = document.getElementById('staffDutyHours');
+            dutyHoursSelect.value = `${startTime}-${endTime}`;
+            
+            // Hide custom time selection
+            document.getElementById('customTimeSelection').style.display = 'none';
+            
+            alert(`Custom time ${startTime}-${endTime} applied successfully!`);
+        }
+
+        // Load from localStorage
+        function loadFromLocalStorage() {
+            try {
+                const savedStaff = localStorage.getItem('dutyRoster_staff');
+                const savedUsers = localStorage.getItem('dutyRoster_users');
+                const savedTables = localStorage.getItem('dutyRoster_tables');
+                const savedResources = localStorage.getItem('dutyRoster_resources');
+                const savedActivities = localStorage.getItem('dutyRoster_activities');
+                
+                if (savedStaff) staffData = JSON.parse(savedStaff);
+                if (savedUsers) usersData = JSON.parse(savedUsers);
+                if (savedTables) tablesData = JSON.parse(savedTables);
+                if (savedResources) resourcesData = JSON.parse(savedResources);
+                if (savedActivities) activityLog = JSON.parse(savedActivities);
+                
+                if (staffData.length === 0) {
+                    initializeSampleData();
+                }
+            } catch (e) {
+                console.error('Error loading data:', e);
+                initializeSampleData();
+            }
+        }
+
+        // Save to localStorage
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('dutyRoster_staff', JSON.stringify(staffData));
+                localStorage.setItem('dutyRoster_users', JSON.stringify(usersData));
+                localStorage.setItem('dutyRoster_tables', JSON.stringify(tablesData));
+                localStorage.setItem('dutyRoster_resources', JSON.stringify(resourcesData));
+                localStorage.setItem('dutyRoster_activities', JSON.stringify(activityLog));
+            } catch (e) {
+                console.error('Error saving data:', e);
+            }
+        }
+
+        // Add activity
+        function addActivity(message) {
+            const activity = {
+                message: message,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                date: new Date().toLocaleDateString()
+            };
+            activityLog.unshift(activity);
+            if (activityLog.length > 50) activityLog = activityLog.slice(0, 50);
+            saveToLocalStorage();
+            updateActivityFeed();
+        }
+
+        // Update activity feed
+        function updateActivityFeed() {
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = '';
+            
+            activityLog.slice(0, 5).forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-dot"></div>
+                    <div class="activity-content">${activity.message}</div>
+                    <div class="activity-time">${activity.time}</div>
+                `;
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        // Initialize sample data
+        function initializeSampleData() {
+            staffData = [
+                { 
+                    id: 'EMP001', 
+                    name: "John Doe", 
+                    designation: "Test Engineer", 
+                    dutyHours: "08:00-16:00", 
+                    location: "Test Room", 
+                    restDay: "Monday", 
+                    status: "On Duty"
+                },
+                { 
+                    id: 'EMP002', 
+                    name: "Jane Smith", 
+                    designation: "Control Operator", 
+                    dutyHours: "16:00-00:00", 
+                    location: "Control Building", 
+                    restDay: "Tuesday", 
+                    status: "Rest"
+                },
+                { 
+                    id: 'EMP003', 
+                    name: "Robert Brown", 
+                    designation: "Night Supervisor", 
+                    dutyHours: "00:00-08:00", 
+                    location: "Test Room", 
+                    restDay: "Wednesday", 
+                    status: "Sick"
+                },
+                { 
+                    id: 'EMP004', 
+                    name: "Maria Garcia", 
+                    designation: "Day Operator", 
+                    dutyHours: "08:00-16:00", 
+                    location: "Control Building", 
+                    restDay: "Thursday", 
+                    status: "On Duty"
+                }
+            ];
+
+            usersData = [
+                { userId: 'EMP001', password: 'EMP001@2024', name: "John Doe", role: "employee", permissions: {} },
+                { userId: 'EMP002', password: 'EMP002@2024', name: "Jane Smith", role: "editor", permissions: {} }
+            ];
+
+            tablesData = [
+                { 
+                    id: 'table1', 
+                    name: 'Attendance_June', 
+                    rows: 10, 
+                    columns: 5, 
+                    data: [], 
+                    permissions: {},
+                    columnsConfig: [
+                        { name: 'Employee ID', type: 'text' },
+                        { name: 'Name', type: 'text' },
+                        { name: 'Department', type: 'text' },
+                        { name: 'Hours Worked', type: 'number' },
+                        { name: 'Status', type: 'select', options: ['Present', 'Absent', 'Late', 'Leave'] }
+                    ]
+                }
+            ];
+
+            tablesData.forEach(table => {
+                table.data = [];
+                for (let i = 0; i < table.rows; i++) {
+                    const row = [];
+                    for (let j = 0; j < table.columns; j++) {
+                        if (table.id === 'table1') {
+                            const sampleData = [
+                                [`EMP${100 + i}`, `Employee ${i + 1}`, i % 2 === 0 ? 'Engineering' : 'Operations', 8 + Math.floor(Math.random() * 4), ['Present', 'Absent', 'Late', 'Leave'][Math.floor(Math.random() * 4)]],
+                                [`EMP${101 + i}`, `Employee ${i + 2}`, i % 2 === 0 ? 'HR' : 'Finance', 7 + Math.floor(Math.random() * 5), ['Present', 'Absent', 'Late', 'Leave'][Math.floor(Math.random() * 4)]]
+                            ];
+                            row.push(sampleData[i % 2][j] || '');
+                        } else {
+                            row.push('');
+                        }
+                    }
+                    table.data.push(row);
+                }
+            });
+
+            resourcesData = [
+                { name: 'Company Portal', url: 'https://portal.company.com', icon: 'fas fa-link' },
+                { name: 'HR Documents', url: 'https://hr.company.com/docs', icon: 'fas fa-file' },
+                { name: 'Analytics Dashboard', url: 'https://analytics.company.com', icon: 'fas fa-chart-bar' }
+            ];
+
+            activityLog = [
+                { message: 'System initialized with sample data', time: '09:00', date: new Date().toLocaleDateString() },
+                { message: 'Admin logged in', time: '09:05', date: new Date().toLocaleDateString() }
+            ];
+
+            addActivity('System loaded successfully');
+        }
+
+        // Update stats
+        function updateStats() {
+            const onDutyCount = staffData.filter(s => s.status === 'On Duty').length;
+            const restCount = staffData.filter(s => s.status === 'Rest').length;
+            
+            document.getElementById('on-duty-count').textContent = onDutyCount;
+            document.getElementById('rest-count').textContent = restCount;
+            document.getElementById('user-count').textContent = usersData.length;
+            document.getElementById('table-count').textContent = tablesData.length;
+        }
+
+        // Generate Employee ID
+        function generateEmployeeId() {
+            const prefix = 'EMP';
+            const number = (staffData.length + 1).toString().padStart(3, '0');
+            return prefix + number;
+        }
+
+        // Generate Password
+        function generatePassword(employeeId) {
+            return `${employeeId}@${new Date().getFullYear()}`;
+        }
+
+        // Load flash cards
+        function loadFlashCards() {
+            const container = document.getElementById('staff-cards-container');
+            const currentDayName = daysOfWeek[currentDay];
+            
+            container.innerHTML = '';
+            
+            staffData.forEach((staff, index) => {
+                const isRestDay = staff.restDay === currentDayName;
+                const status = isRestDay ? 'Rest' : staff.status;
+                
+                const card = document.createElement('div');
+                card.className = 'staff-card';
+                card.innerHTML = `
+                    <div class="staff-card-header">
+                        <div class="staff-info">
+                            <h4>${staff.name}</h4>
+                            <div class="staff-id">${staff.id}</div>
+                        </div>
+                        <div class="staff-status ${status.toLowerCase().replace(' ', '-')}">
+                            ${status}
+                        </div>
+                    </div>
+                    <div class="staff-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Designation:</span>
+                            <span class="detail-value">${staff.designation}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Duty Hours:</span>
+                            <span class="detail-value">${isRestDay ? 'REST DAY' : staff.dutyHours}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Location:</span>
+                            <span class="detail-value">${staff.location}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Rest Day:</span>
+                            <span class="detail-value">${staff.restDay}</span>
+                        </div>
+                    </div>
+                    <div class="staff-actions">
+                        <button class="btn btn-sm btn-warning" onclick="swapDuty(${index})">
+                            <i class="fas fa-exchange-alt"></i> Swap
+                        </button>
+                        <button class="btn btn-sm btn-primary" onclick="editStaff('${staff.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="showDeleteConfirmation('staff', ${index}, '${staff.name}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            document.getElementById('current-day').textContent = currentDayName;
+        }
+
+        // Swap duty
+        function swapDuty(staffIndex) {
+            const staff = staffData[staffIndex];
+            const availableStaff = staffData.filter((s, i) => i !== staffIndex && s.status === 'On Duty');
+            
+            if (availableStaff.length === 0) {
+                alert('No other staff available for duty swap');
+                return;
+            }
+            
+            const staffNames = availableStaff.map(s => s.name).join(', ');
+            const confirmSwap = confirm(`Swap duty with: ${staffNames}\n\nSelect staff from the list to swap with ${staff.name}?`);
+            
+            if (confirmSwap) {
+                const swapIndex = parseInt(prompt(`Enter staff number to swap with (1-${availableStaff.length}):`)) - 1;
+                
+                if (swapIndex >= 0 && swapIndex < availableStaff.length) {
+                    const swapStaff = availableStaff[swapIndex];
+                    const tempDutyHours = staff.dutyHours;
+                    const tempLocation = staff.location;
+                    
+                    staff.dutyHours = swapStaff.dutyHours;
+                    staff.location = swapStaff.location;
+                    swapStaff.dutyHours = tempDutyHours;
+                    swapStaff.location = tempLocation;
+                    
+                    addActivity(`Duty swapped between ${staff.name} and ${swapStaff.name}`);
+                    loadFlashCards();
+                    saveToLocalStorage();
+                    alert('Duty swapped successfully!');
+                }
+            }
+        }
+
+        // Load staff table
+        function loadStaffTable() {
+            const tableBody = document.getElementById('staffTableBody');
+            tableBody.innerHTML = '';
+            
+            staffData.forEach((staff, index) => {
+                const hasAccount = usersData.some(u => u.userId === staff.id);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-weight: 600;">${staff.id}</td>
+                    <td>${staff.name}</td>
+                    <td>${staff.designation}</td>
+                    <td>${staff.dutyHours}</td>
+                    <td>${staff.location}</td>
+                    <td>${staff.restDay}</td>
+                    <td>
+                        <span class="staff-status ${staff.status.toLowerCase().replace(' ', '-')}" style="display: inline-block;">
+                            ${staff.status}
+                        </span>
+                    </td>
+                    <td>
+                        ${hasAccount ? 
+                            '<span style="background: #27ae60; color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">✓ Account</span>' :
+                            '<span style="background: #f1f5f9; color: #7f8c8d; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">No Account</span>'}
+                    </td>
+                    <td>
+                        <button onclick="editStaff('${staff.id}')" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="createUserAccount('${staff.id}')" class="btn btn-sm btn-primary" ${hasAccount ? 'disabled' : ''}>
+                            <i class="fas fa-user-plus"></i>
+                        </button>
+                        <button onclick="showDeleteConfirmation('staff', ${index}, '${staff.name}')" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Edit staff
+        function editStaff(staffId) {
+            const staff = staffData.find(s => s.id === staffId);
+            if (!staff) return;
+            
+            document.getElementById('staffModalTitle').textContent = 'Edit Staff';
+            document.getElementById('editStaffId').value = staffId;
+            
+            document.getElementById('staffName').value = staff.name;
+            document.getElementById('staffDesignation').value = staff.designation;
+            document.getElementById('staffDutyHours').value = staff.dutyHours;
+            document.getElementById('staffLocation').value = staff.location;
+            document.getElementById('restDaySelect').value = staff.restDay;
+            document.getElementById('staffStatus').value = staff.status;
+            
+            // Handle custom time display for editing
+            const dutyHoursSelect = document.getElementById('staffDutyHours');
+            const customTimeDiv = document.getElementById('customTimeSelection');
+            
+            // Check if duty hours is a custom format (contains hyphen)
+            if (staff.dutyHours && staff.dutyHours.includes('-')) {
+                const [startTime, endTime] = staff.dutyHours.split('-');
+                
+                // Check if it's a standard option
+                const standardOptions = ['08:00-16:00', '16:00-00:00', '00:00-08:00', '09:00-17:00', '10:00-18:00'];
+                if (standardOptions.includes(staff.dutyHours)) {
+                    dutyHoursSelect.value = staff.dutyHours;
+                    customTimeDiv.style.display = 'none';
+                } else {
+                    // It's a custom time
+                    dutyHoursSelect.value = 'custom';
+                    document.getElementById('startTime').value = startTime;
+                    document.getElementById('endTime').value = endTime;
+                    customTimeDiv.style.display = 'block';
+                }
+            }
+            
+            document.getElementById('addStaffModal').style.display = 'flex';
+        }
+
+        // Create user account from staff table
+        function createUserAccount(employeeId) {
+            const staff = staffData.find(s => s.id === employeeId);
+            if (!staff) return;
+            
+            if (usersData.some(u => u.userId === employeeId)) {
+                alert('User account already exists for this staff member');
+                return;
+            }
+            
+            const role = 'employee';
+            const password = generatePassword(employeeId);
+            const newUser = {
+                userId: employeeId,
+                password: password,
+                name: staff.name,
+                role: role,
+                permissions: {}
+            };
+            
+            usersData.push(newUser);
+            addActivity(`User account created for ${staff.name} (${employeeId})`);
+            loadStaffTable();
+            loadUsersTable();
+            loadPermissionTable();
+            saveToLocalStorage();
+            updateStats();
+            
+            alert(`User account created!\n\nUser ID: ${employeeId}\nPassword: ${password}\nRole: ${role}`);
+        }
+
+        // Load users table
+        function loadUsersTable() {
+            const tableBody = document.getElementById('usersTableBody');
+            tableBody.innerHTML = '';
+            
+            usersData.forEach((user, index) => {
+                const viewCount = Object.values(user.permissions).filter(p => p === 'view').length;
+                const editCount = Object.values(user.permissions).filter(p => p === 'edit').length;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td style="font-family: monospace; font-weight: 600;">${user.userId}</td>
+                    <td>${user.name}</td>
+                    <td>
+                        <span style="padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; background: ${user.role === 'employee' ? '#dbeafe' : user.role === 'editor' ? '#d1fae5' : '#fef3c7'}; color: ${user.role === 'employee' ? '#1e40af' : user.role === 'editor' ? '#065f46' : '#92400e'}">
+                            ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                        </span>
+                    </td>
+                    <td style="font-family: monospace;">${user.password}</td>
+                    <td>
+                        <span class="permission-view">${viewCount} View</span>
+                        <span class="permission-edit" style="margin-left: 5px;">${editCount} Edit</span>
+                    </td>
+                    <td>
+                        <button onclick="editUser('${user.userId}')" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="resetUserPassword('${user.userId}')" class="btn btn-sm btn-primary">
+                            <i class="fas fa-key"></i>
+                        </button>
+                        <button onclick="showDeleteConfirmation('user', ${index}, '${user.name}')" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Edit user
+        function editUser(userId) {
+            const user = usersData.find(u => u.userId === userId);
+            if (!user) return;
+            
+            document.getElementById('userModalTitle').textContent = 'Edit User';
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('employeeSelect').value = userId;
+            document.getElementById('employeeSelect').disabled = true;
+            document.getElementById('userRole').value = user.role;
+            
+            document.getElementById('addUserModal').style.display = 'flex';
+        }
+
+        // Reset password
+        function resetUserPassword(userId) {
+            const user = usersData.find(u => u.userId === userId);
+            if (!user) return;
+            
+            const newPassword = prompt(`Enter new password for ${user.name}:`, generatePassword(userId));
+            
+            if (newPassword && newPassword.trim() !== '') {
+                user.password = newPassword.trim();
+                addActivity(`Password reset for ${user.name}`);
+                loadUsersTable();
+                saveToLocalStorage();
+                alert('Password reset successfully!');
+            }
+        }
+
+        // Load permission table
+        function loadPermissionTable() {
+            const headerRow = document.getElementById('permissionsHeader');
+            const tableBody = document.getElementById('permissionsTableBody');
+            
+            headerRow.innerHTML = '<th style="font-weight: 600;">Table Name</th>';
+            tableBody.innerHTML = '';
+            
+            usersData.forEach(user => {
+                headerRow.innerHTML += `<th style="font-weight: 600;">${user.name}</th>`;
+            });
+            
+            tablesData.forEach(table => {
+                let row = `<tr><td style="font-weight: 500;">${table.name}</td>`;
+                
+                usersData.forEach(user => {
+                    const permission = user.permissions[table.id] || 'none';
+                    row += `<td>
+                        <span class="permission-${permission}">${permission.charAt(0).toUpperCase() + permission.slice(1)}</span>
+                    </td>`;
+                });
+                
+                row += '</tr>';
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Load table tabs
+        function loadTableTabs() {
+            const tableTabs = document.getElementById('tableTabs');
+            tableTabs.innerHTML = '';
+            
+            tablesData.forEach((table, index) => {
+                const tab = document.createElement('button');
+                tab.className = `table-tab ${index === currentTableIndex ? 'active' : ''}`;
+                tab.innerHTML = `<i class="fas fa-table"></i> ${table.name}`;
+                tab.onclick = () => selectTable(index);
+                tableTabs.appendChild(tab);
+            });
+            
+            const addTab = document.createElement('button');
+            addTab.className = 'table-tab add-tab';
+            addTab.innerHTML = '<i class="fas fa-plus"></i> New Table';
+            addTab.onclick = () => document.getElementById('createTableModal').style.display = 'flex';
+            tableTabs.appendChild(addTab);
+        }
+
+        // Select table
+        function selectTable(index) {
+            currentTableIndex = index;
+            const table = tablesData[index];
+            
+            document.getElementById('activeTableName').textContent = table.name;
+            document.getElementById('activeTableInfo').textContent = `${table.rows} rows × ${table.columns} columns`;
+            
+            document.getElementById('renameTableBtn').disabled = false;
+            document.getElementById('exportTableBtn').disabled = false;
+            document.getElementById('deleteTableBtn').disabled = false;
+            
+            document.getElementById('excelTableContainer').style.display = 'block';
+            document.getElementById('rowControls').style.display = 'flex';
+            
+            renderExcelTable(table);
+            loadTableTabs();
+        }
+
+        // Render Excel table
+        function renderExcelTable(table) {
+            const tableHeader = document.getElementById('tableHeader');
+            const tableBody = document.getElementById('tableBody');
+            
+            tableHeader.innerHTML = '';
+            tableBody.innerHTML = '';
+            
+            let headerRow = '<tr>';
+            table.columnsConfig.forEach((col, index) => {
+                headerRow += `<th>${col.name}</th>`;
+            });
+            headerRow += '</tr>';
+            tableHeader.innerHTML = headerRow;
+            
+            for (let i = 0; i < table.rows; i++) {
+                const row = document.createElement('tr');
+                
+                for (let j = 0; j < table.columns; j++) {
+                    const colConfig = table.columnsConfig[j];
+                    const cellValue = table.data[i] ? (table.data[i][j] || '') : '';
+                    
+                    let cellContent = '';
+                    if (colConfig.type === 'select') {
+                        cellContent = `
+                            <select class="cell-select" data-row="${i}" data-col="${j}">
+                                <option value=""></option>
+                                ${colConfig.options.map(opt => 
+                                    `<option value="${opt}" ${opt === cellValue ? 'selected' : ''}>${opt}</option>`
+                                ).join('')}
+                            </select>
+                        `;
+                    } else {
+                        cellContent = `
+                            <input type="text" value="${cellValue}" 
+                                   data-row="${i}" data-col="${j}"
+                                   placeholder="Enter ${colConfig.type}..."
+                                   oninput="updateTableCell(${i}, ${j}, this.value)">
+                        `;
+                    }
+                    
+                    row.innerHTML += `
+                        <td data-row="${i}" data-col="${j}">
+                            ${cellContent}
+                        </td>
+                    `;
+                }
+                tableBody.appendChild(row);
+            }
+        }
+
+        // Update table cell
+        function updateTableCell(row, col, value) {
+            if (currentTableIndex === -1) return;
+            const table = tablesData[currentTableIndex];
+            if (!table.data[row]) table.data[row] = [];
+            table.data[row][col] = value;
+            saveToLocalStorage();
+        }
+
+        // Export table
+        function exportTable() {
+            if (currentTableIndex === -1) {
+                alert('Please select a table first');
+                return;
+            }
+            
+            const table = tablesData[currentTableIndex];
+            let csvContent = '';
+            csvContent += table.columnsConfig.map(col => `"${col.name}"`).join(',') + '\n';
+            table.data.forEach(row => {
+                csvContent += row.map(cell => {
+                    if (typeof cell === 'string' && cell.includes(',')) {
+                        return `"${cell}"`;
+                    }
+                    return cell || '';
+                }).join(',') + '\n';
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${table.name}_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            addActivity(`Table "${table.name}" exported`);
+            alert('Table exported successfully!');
+        }
+
+        // Load resources
+        function loadResources() {
+            const container = document.getElementById('iconContainer');
+            container.innerHTML = '';
+            
+            resourcesData.forEach((resource, index) => {
+                const item = document.createElement('div');
+                item.className = 'resource-item';
+                item.innerHTML = `
+                    <button class="delete-resource" onclick="showDeleteConfirmation('resource', ${index}, '${resource.name}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <i class="${resource.icon}"></i>
+                    <p>${resource.name}</p>
+                `;
+                item.addEventListener('click', () => {
+                    window.open(resource.url, '_blank');
+                });
+                container.appendChild(item);
+            });
+        }
+
+        // Show delete confirmation
+        function showDeleteConfirmation(type, index, name) {
+            deleteItemType = type;
+            deleteItemIndex = index;
+            document.getElementById('deleteConfirmTitle').textContent = `Delete ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+            document.getElementById('deleteConfirmMessage').textContent = `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+            document.getElementById('deleteConfirmModal').style.display = 'flex';
+        }
+
+        // Perform delete
+        function performDelete() {
+            switch(deleteItemType) {
+                case 'staff':
+                    const staff = staffData[deleteItemIndex];
+                    const userIndex = usersData.findIndex(u => u.userId === staff.id);
+                    if (userIndex !== -1) {
+                        usersData.splice(userIndex, 1);
+                    }
+                    staffData.splice(deleteItemIndex, 1);
+                    addActivity(`Staff member "${staff.name}" deleted`);
+                    loadStaffTable();
+                    loadUsersTable();
+                    loadPermissionTable();
+                    break;
+                    
+                case 'user':
+                    const user = usersData[deleteItemIndex];
+                    usersData.splice(deleteItemIndex, 1);
+                    addActivity(`User account "${user.name}" deleted`);
+                    loadUsersTable();
+                    loadPermissionTable();
+                    break;
+                    
+                case 'table':
+                    const table = tablesData[deleteItemIndex];
+                    tablesData.splice(deleteItemIndex, 1);
+                    currentTableIndex = -1;
+                    addActivity(`Table "${table.name}" deleted`);
+                    loadTableTabs();
+                    selectTable(-1);
+                    break;
+                    
+                case 'resource':
+                    const resource = resourcesData[deleteItemIndex];
+                    resourcesData.splice(deleteItemIndex, 1);
+                    addActivity(`Resource "${resource.name}" deleted`);
+                    loadResources();
+                    break;
+            }
+            
+            updateStats();
+            loadFlashCards();
+            saveToLocalStorage();
+            document.getElementById('deleteConfirmModal').style.display = 'none';
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL data? This action cannot be undone!')) {
+                staffData = [];
+                usersData = [];
+                tablesData = [];
+                resourcesData = [];
+                activityLog = [];
+                
+                addActivity('All data cleared by administrator');
+                initializeSampleData();
+                
+                loadStaffTable();
+                loadUsersTable();
+                loadTableTabs();
+                loadResources();
+                loadFlashCards();
+                updateStats();
+                
+                alert('All data has been cleared. Sample data has been loaded.');
+            }
+        }
+
+        // Populate employee select
+        function populateEmployeeSelect() {
+            const select = document.getElementById('employeeSelect');
+            select.innerHTML = '<option value="">Select employee</option>';
+            staffData.forEach(staff => {
+                const hasAccount = usersData.some(u => u.userId === staff.id);
+                if (!hasAccount) {
+                    select.innerHTML += `<option value="${staff.id}">${staff.name} (${staff.id})</option>`;
+                }
+            });
+            
+            const resetSelect = document.getElementById('resetUserSelect');
+            resetSelect.innerHTML = '<option value="">Select user</option>';
+            usersData.forEach(user => {
+                resetSelect.innerHTML += `<option value="${user.userId}">${user.name} (${user.userId})</option>`;
+            });
+        }
+
+        // Initialize application
+        function initialize() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+            
+            loadFromLocalStorage();
+            updateStats();
+            loadFlashCards();
+            loadStaffTable();
+            loadUsersTable();
+            loadPermissionTable();
+            loadTableTabs();
+            loadResources();
+            updateActivityFeed();
+            populateEmployeeSelect();
+            
+            const today = new Date().getDay();
+            currentDay = today === 0 ? 6 : today - 1;
+            
+            // Theme management
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.theme-option').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    const theme = this.getAttribute('data-theme');
+                    document.body.className = theme;
+                });
+            });
+            
+            // Navigation
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.nav-menu a').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    document.querySelectorAll('.section-content').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    const sectionId = link.getAttribute('data-section') + '-section';
+                    document.getElementById(sectionId).style.display = 'block';
+                    document.getElementById('page-title').textContent = link.querySelector('span').textContent;
+                    
+                    if (sectionId === 'users-section') {
+                        populateEmployeeSelect();
+                    }
+                });
+            });
+            
+            // Day navigation
+            document.getElementById('prev-day-btn').addEventListener('click', () => {
+                currentDay = (currentDay - 1 + 7) % 7;
+                loadFlashCards();
+            });
+            
+            document.getElementById('next-day-btn').addEventListener('click', () => {
+                currentDay = (currentDay + 1) % 7;
+                loadFlashCards();
+            });
+            
+            // Add User Form
+            document.getElementById('userForm').onsubmit = function(e) {
+                e.preventDefault();
+                
+                const employeeId = document.getElementById('editUserId').value || document.getElementById('employeeSelect').value;
+                const role = document.getElementById('userRole').value;
+                const isEditMode = !!document.getElementById('editUserId').value;
+                
+                const staff = staffData.find(s => s.id === employeeId);
+                if (!staff) {
+                    alert('Please select a valid employee');
+                    return;
+                }
+                
+                if (isEditMode) {
+                    // Edit existing user
+                    const userIndex = usersData.findIndex(u => u.userId === employeeId);
+                    if (userIndex !== -1) {
+                        usersData[userIndex].role = role;
+                        addActivity(`User account updated for ${staff.name}`);
+                    }
+                } else {
+                    // Check if user already exists
+                    if (usersData.some(u => u.userId === employeeId)) {
+                        alert('User account already exists for this employee');
+                        return;
+                    }
+                    
+                    const password = generatePassword(employeeId);
+                    
+                    const newUser = {
+                        userId: employeeId,
+                        password: password,
+                        name: staff.name,
+                        role: role,
+                        permissions: {}
+                    };
+                    
+                    usersData.push(newUser);
+                    addActivity(`User account created for ${staff.name} (${employeeId})`);
+                    
+                    alert(`User account created!\n\nUser ID: ${employeeId}\nPassword: ${password}\nRole: ${role}`);
+                }
+                
+                // Update UI
+                loadStaffTable();
+                loadUsersTable();
+                loadPermissionTable();
+                saveToLocalStorage();
+                updateStats();
+                
+                // Close modal and reset form
+                document.getElementById('addUserModal').style.display = 'none';
+                this.reset();
+                document.getElementById('editUserId').value = '';
+                document.getElementById('userModalTitle').textContent = 'Add New User';
+                document.getElementById('employeeSelect').disabled = false;
+                document.getElementById('employeeSelect').value = '';
+                document.getElementById('userRole').value = 'employee';
+                
+                // Refresh the employee select dropdown
+                populateEmployeeSelect();
+            };
+            
+            // Add Staff Form
+            document.getElementById('staffForm').onsubmit = function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('staffName').value;
+                const designation = document.getElementById('staffDesignation').value;
+                let dutyHours = document.getElementById('staffDutyHours').value;
+                const location = document.getElementById('staffLocation').value;
+                const restDay = document.getElementById('restDaySelect').value;
+                const status = document.getElementById('staffStatus').value;
+                const editStaffId = document.getElementById('editStaffId').value;
+                const isEditMode = !!editStaffId;
+                let employeeId = editStaffId;
+                
+                // Validate duty hours
+                if (!dutyHours) {
+                    alert('Please select duty hours');
+                    return;
+                }
+                
+                if (isEditMode) {
+                    const staffIndex = staffData.findIndex(s => s.id === editStaffId);
+                    if (staffIndex !== -1) {
+                        staffData[staffIndex].name = name;
+                        staffData[staffIndex].designation = designation;
+                        staffData[staffIndex].dutyHours = dutyHours;
+                        staffData[staffIndex].location = location;
+                        staffData[staffIndex].restDay = restDay;
+                        staffData[staffIndex].status = status;
+                        const userIndex = usersData.findIndex(u => u.userId === editStaffId);
+                        if (userIndex !== -1) {
+                            usersData[userIndex].name = name;
+                        }
+                        addActivity(`Staff member "${name}" updated`);
+                    }
+                } else {
+                    employeeId = generateEmployeeId();
+                    const newStaff = {
+                        id: employeeId,
+                        name: name,
+                        designation: designation,
+                        dutyHours: dutyHours,
+                        location: location,
+                        restDay: restDay,
+                        status: status
+                    };
+                    staffData.push(newStaff);
+                    addActivity(`New staff member "${name}" added`);
+                }
+                
+                loadStaffTable();
+                loadFlashCards();
+                updateStats();
+                saveToLocalStorage();
+                document.getElementById('addStaffModal').style.display = 'none';
+                this.reset();
+                document.getElementById('editStaffId').value = '';
+                document.getElementById('staffModalTitle').textContent = 'Add New Staff';
+                document.getElementById('customTimeSelection').style.display = 'none';
+            };
+            
+            // Create Table Form
+            document.getElementById('createTableForm').onsubmit = function(e) {
+                e.preventDefault();
+                const tableName = document.getElementById('tableName').value;
+                const rows = parseInt(document.getElementById('tableRows').value);
+                const columns = parseInt(document.getElementById('tableColumns').value);
+                const columnHeadersInput = document.getElementById('columnHeaders').value;
+                
+                if (!tableName || rows < 1 || columns < 1) {
+                    alert('Please fill all required fields with valid values');
+                    return;
+                }
+                
+                let columnHeaders = [];
+                if (columnHeadersInput.trim()) {
+                    columnHeaders = columnHeadersInput.split(',').map(h => h.trim());
+                } else {
+                    for (let i = 0; i < columns; i++) {
+                        columnHeaders.push(`Column ${i + 1}`);
+                    }
+                }
+                
+                while (columnHeaders.length < columns) {
+                    columnHeaders.push(`Column ${columnHeaders.length + 1}`);
+                }
+                
+                if (columnHeaders.length > columns) {
+                    columnHeaders = columnHeaders.slice(0, columns);
+                }
+                
+                const columnsConfig = columnHeaders.map(header => {
+                    return { name: header, type: 'text' };
+                });
+                
+                const data = [];
+                for (let i = 0; i < rows; i++) {
+                    const row = [];
+                    for (let j = 0; j < columns; j++) {
+                        row.push('');
+                    }
+                    data.push(row);
+                }
+                
+                const newTable = {
+                    id: `table${Date.now()}`,
+                    name: tableName,
+                    rows: rows,
+                    columns: columns,
+                    data: data,
+                    permissions: {},
+                    columnsConfig: columnsConfig
+                };
+                
+                tablesData.push(newTable);
+                addActivity(`New table "${tableName}" created`);
+                document.getElementById('createTableModal').style.display = 'none';
+                this.reset();
+                loadTableTabs();
+                selectTable(tablesData.length - 1);
+                updateStats();
+                saveToLocalStorage();
+                alert(`Table "${tableName}" created successfully!`);
+            };
+            
+            // Add Resource Form
+            document.getElementById('resourceForm').onsubmit = function(e) {
+                e.preventDefault();
+                const name = document.getElementById('resourceName').value;
+                const url = document.getElementById('resourceUrl').value;
+                const icon = document.getElementById('resourceIcon').value;
+                resourcesData.push({ name, url, icon });
+                addActivity(`New resource "${name}" added`);
+                document.getElementById('addResourceModal').style.display = 'none';
+                this.reset();
+                loadResources();
+                saveToLocalStorage();
+            };
+            
+            // Reset Password Form
+            document.getElementById('resetPasswordForm').onsubmit = function(e) {
+                e.preventDefault();
+                const userId = document.getElementById('resetUserSelect').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const user = usersData.find(u => u.userId === userId);
+                if (user) {
+                    user.password = newPassword;
+                    addActivity(`Password reset for ${user.name}`);
+                    loadUsersTable();
+                    saveToLocalStorage();
+                    document.getElementById('resetPasswordModal').style.display = 'none';
+                    this.reset();
+                    alert('Password reset successfully!');
+                }
+            };
+            
+            // Button event listeners
+            document.getElementById('addUserBtn').onclick = function() {
+                populateEmployeeSelect();
+                document.getElementById('userModalTitle').textContent = 'Add New User';
+                document.getElementById('editUserId').value = '';
+                document.getElementById('employeeSelect').disabled = false;
+                document.getElementById('addUserModal').style.display = 'flex';
+            };
+            
+            document.getElementById('addStaffBtn').onclick = function() {
+                document.getElementById('staffModalTitle').textContent = 'Add New Staff';
+                document.getElementById('editStaffId').value = '';
+                document.getElementById('staffDutyHours').value = '';
+                document.getElementById('customTimeSelection').style.display = 'none';
+                document.getElementById('addStaffModal').style.display = 'flex';
+            };
+            
+            document.getElementById('createTableBtn').onclick = function() {
+                document.getElementById('createTableModal').style.display = 'flex';
+            };
+            
+            document.getElementById('uploadResourceBtn').onclick = function() {
+                document.getElementById('addResourceModal').style.display = 'flex';
+            };
+            
+            document.getElementById('uploadTrigger').onclick = function() {
+                document.getElementById('addResourceModal').style.display = 'flex';
+            };
+            
+            document.getElementById('quickAddUser').onclick = function() {
+                populateEmployeeSelect();
+                document.getElementById('userModalTitle').textContent = 'Add New User';
+                document.getElementById('editUserId').value = '';
+                document.getElementById('employeeSelect').disabled = false;
+                document.getElementById('addUserModal').style.display = 'flex';
+            };
+            
+            document.getElementById('quickCreateTable').onclick = function() {
+                document.getElementById('createTableModal').style.display = 'flex';
+            };
+            
+            document.getElementById('quickResetPassword').onclick = function() {
+                populateEmployeeSelect();
+                document.getElementById('resetPasswordModal').style.display = 'flex';
+            };
+            
+            document.getElementById('quickClearData').onclick = clearAllData;
+            
+            document.getElementById('renameTableBtn').onclick = function() {
+                if (currentTableIndex === -1) {
+                    alert('Please select a table first');
+                    return;
+                }
+                const table = tablesData[currentTableIndex];
+                const newName = prompt('Enter new table name:', table.name);
+                if (newName && newName.trim() !== '') {
+                    table.name = newName.trim();
+                    addActivity(`Table renamed to "${table.name}"`);
+                    loadTableTabs();
+                    selectTable(currentTableIndex);
+                    saveToLocalStorage();
+                }
+            };
+            
+            document.getElementById('exportTableBtn').onclick = exportTable;
+            
+            document.getElementById('deleteTableBtn').onclick = function() {
+                if (currentTableIndex === -1) {
+                    alert('Please select a table first');
+                    return;
+                }
+                const table = tablesData[currentTableIndex];
+                showDeleteConfirmation('table', currentTableIndex, table.name);
+            };
+            
+            document.getElementById('refreshPermissionsBtn').onclick = function() {
+                loadPermissionTable();
+                alert('Permissions refreshed!');
+            };
+            
+            document.getElementById('insertRowBtn').onclick = function() {
+                if (currentTableIndex === -1) return;
+                const table = tablesData[currentTableIndex];
+                const newRow = Array(table.columns).fill('');
+                table.data.push(newRow);
+                table.rows++;
+                renderExcelTable(table);
+                saveToLocalStorage();
+                addActivity(`Row added to table "${table.name}"`);
+            };
+            
+            document.getElementById('addColumnBtn').onclick = function() {
+                if (currentTableIndex === -1) return;
+                const table = tablesData[currentTableIndex];
+                const colName = prompt('Enter column name:', `Column ${table.columns + 1}`);
+                if (colName) {
+                    table.columnsConfig.push({ name: colName, type: 'text' });
+                    table.columns++;
+                    table.data.forEach(row => {
+                        row.push('');
+                    });
+                    renderExcelTable(table);
+                    saveToLocalStorage();
+                    addActivity(`Column "${colName}" added to table "${table.name}"`);
+                }
+            };
+            
+            // Delete confirmation
+            document.getElementById('cancelDeleteBtn').onclick = function() {
+                document.getElementById('deleteConfirmModal').style.display = 'none';
+            };
+            
+            document.getElementById('confirmDeleteBtn').onclick = function() {
+                performDelete();
+            };
+            
+            // Modal close handlers
+            document.getElementById('closeAddUserBtn').onclick = function() {
+                document.getElementById('addUserModal').style.display = 'none';
+                document.getElementById('userForm').reset();
+                document.getElementById('editUserId').value = '';
+                document.getElementById('userModalTitle').textContent = 'Add New User';
+                document.getElementById('employeeSelect').disabled = false;
+                populateEmployeeSelect();
+            };
+            
+            document.getElementById('closeAddStaffBtn').onclick = function() {
+                document.getElementById('addStaffModal').style.display = 'none';
+                document.getElementById('staffForm').reset();
+                document.getElementById('editStaffId').value = '';
+                document.getElementById('staffModalTitle').textContent = 'Add New Staff';
+                document.getElementById('customTimeSelection').style.display = 'none';
+            };
+            
+            document.getElementById('closeCreateTableBtn').onclick = function() {
+                document.getElementById('createTableModal').style.display = 'none';
+                document.getElementById('createTableForm').reset();
+            };
+            
+            document.getElementById('closeResetPasswordBtn').onclick = function() {
+                document.getElementById('resetPasswordModal').style.display = 'none';
+                document.getElementById('resetPasswordForm').reset();
+            };
+            
+            document.getElementById('closeResourceBtn').onclick = function() {
+                document.getElementById('addResourceModal').style.display = 'none';
+                document.getElementById('resourceForm').reset();
+            };
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                const modals = ['addUserModal', 'addStaffModal', 'createTableModal', 'deleteConfirmModal', 
+                              'resetPasswordModal', 'addResourceModal'];
+                modals.forEach(modal => {
+                    const modalElement = document.getElementById(modal);
+                    if (e.target === modalElement) {
+                        modalElement.style.display = 'none';
+                    }
+                });
+            });
+            
+            addActivity('System initialized');
+        }
+
+        // Start the application
+        initialize();
+    </script>
+</body>
+</html>
